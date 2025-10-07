@@ -16,3 +16,30 @@ class Navigation extends ChangeNotifier {
     }
   }
 }
+
+class Lobby extends ChangeNotifier {
+  List<String> hosts = ["ssssssssss", "rrrrrrrrrrsdsf", "ssssssssss"];
+
+  void add(String neew) {
+    hosts.add(neew);
+    notifyListeners();
+  }
+
+  void remove(String target) {
+    hosts.remove(target);
+    notifyListeners();
+  }
+
+  void clean() {
+    hosts = [];
+    notifyListeners();
+  }
+}
+
+class General extends ChangeNotifier {
+  bool busy = false;
+  void undo() {
+    busy = !busy;
+    notifyListeners();
+  }
+}

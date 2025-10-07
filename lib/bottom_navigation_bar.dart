@@ -17,10 +17,12 @@ class Bar extends StatelessWidget {
         BottomNavigationBarItem(
           label: "join",
           icon: Transform.rotate(angle: pi / 2, child: Icon(Icons.sync_alt)),
+          backgroundColor: nav.currentpage == 0 ? Colors.blue : Colors.white,
         ),
         BottomNavigationBarItem(
           label: "host",
           icon: Icon(Icons.wifi_tethering),
+          backgroundColor: nav.currentpage == 1 ? Colors.blue : Colors.white,
         ),
       ],
     );
