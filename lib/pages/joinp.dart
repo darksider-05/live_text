@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:live_text/providers.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
+// ignore: must_be_immutable
 class Jp extends StatefulWidget {
   final Navigation nav;
   final Lobby router;
@@ -22,6 +23,9 @@ class Jp extends StatefulWidget {
 }
 
 class _JpState extends State<Jp> {
+  double progress = 0;
+  int current = 0;
+  int end = 254;
   @override
   void initState() {
     super.initState();
@@ -59,6 +63,10 @@ class _JpState extends State<Jp> {
     var iplist = selfip.split(".").toList();
     iplist = iplist.sublist(0, 3);
     final subnet = iplist.join(".");
+    setState(() {
+      progress = 0;
+      current = 0;
+    });
 
     await Future.forEach<int>(List.generate(254, (i) => i + 1), (sub) async {
       widget._udpclient?.send(
@@ -67,6 +75,10 @@ class _JpState extends State<Jp> {
         2022,
       );
       await Future.delayed(Duration(milliseconds: 5));
+      setState(() {
+        current += 1;
+        progress = current / end;
+      });
     });
     general.busy = false;
   }
@@ -112,8 +124,23 @@ class _JpState extends State<Jp> {
                     size: 28,
                     color: Colors.white,
                   ),
-                  onPressed: () {
-                    ///////////////////////////////////////////////////////////scout(widget.general);
+                  onPressed: () async {
+                    ///////////////////////////////////////////////////////////general.busy ? null :scout(widget.general);
+
+                    ///test start
+                    current = 0;
+                    progress = 0;
+                    widget.general.busy = true;
+                    for (int i = 0; i < 255; i++) {
+                      await Future.delayed(const Duration(milliseconds: 40));
+                      setState(() {
+                        current += 1;
+                        progress = current / end;
+                      });
+                    }
+                    widget.general.busy = false;
+
+                    /// test end
                   },
                 ),
                 IconButton(
@@ -129,6 +156,10 @@ class _JpState extends State<Jp> {
               ],
             ),
           ),
+
+          widget.general.busy
+              ? LinearProgressIndicator(value: progress, color: Colors.amber)
+              : Container(),
 
           router.hosts.isNotEmpty
               ? Expanded(
@@ -189,19 +220,19 @@ class _JpState extends State<Jp> {
                               "press the ",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 16,
                               ),
                             ),
                             Icon(
                               Icons.flip_camera_android_rounded,
                               color: Colors.white,
-                              size: 25,
+                              size: 22,
                             ),
                             Text(
                               " icon to search",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 16,
                               ),
                             ),
                           ],

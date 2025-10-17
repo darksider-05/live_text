@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class Navigation extends ChangeNotifier {
   final controller = PageController();
@@ -8,9 +9,9 @@ class Navigation extends ChangeNotifier {
     if (currentpage != targetpage) {
       currentpage = targetpage;
       controller.animateToPage(
-        curve: Curves.linear,
-        duration: Duration(milliseconds: 300),
         targetpage,
+        curve: Curves.decelerate,
+        duration: Duration(milliseconds: 350),
       );
       notifyListeners();
     }
@@ -18,28 +19,49 @@ class Navigation extends ChangeNotifier {
 }
 
 class Lobby extends ChangeNotifier {
-  List<String> hosts = ["ssssssssss", "rrrrrrrrrrsdsf", "ssssssssss"];
+  List<String> hosts = ["hhhhhhhhh", "gggjydj"];
 
   void add(String neew) {
     hosts.add(neew);
-    notifyListeners();
+    _safeNotify();
   }
 
   void remove(String target) {
     hosts.remove(target);
-    notifyListeners();
+    _safeNotify();
   }
 
   void clean() {
     hosts = [];
-    notifyListeners();
+    _safeNotify();
+  }
+
+  void _safeNotify() {
+    if (SchedulerBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
   }
 }
 
 class General extends ChangeNotifier {
   bool busy = false;
+  String name = "";
   void undo() {
     busy = !busy;
     notifyListeners();
+  }
+
+  bool setname(String neew) {
+    if (neew != "") {
+      name = neew;
+      notifyListeners();
+      return true;
+    }
+    return false;
   }
 }
