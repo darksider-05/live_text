@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_text/bottom_navigation_bar.dart';
 import 'package:live_text/pages/hostp.dart';
-import 'package:live_text/pages/joinp.dart';
+import 'package:live_text/pages/lobby.dart';
 import 'package:provider/provider.dart';
 import 'providers.dart';
 
@@ -54,8 +54,8 @@ class Pv extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       children: [
         nav.currentpage != 1
-            ? Jp(nav: nav, router: router, general: general)
-            : Jp(nav: nav, router: router, general: general),
+            ? Lb(nav: nav, router: router, general: general)
+            : Lb(nav: nav, router: router, general: general),
         nav.currentpage == 1 ? Hp(nav: nav) : Hp(nav: nav),
       ],
     );

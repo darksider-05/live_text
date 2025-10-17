@@ -12,3 +12,6 @@ notes:
 platform permissions are not set up yet, 
 need an icon,
 will release for every platform
+
+update:
+the app is visually ready enough. from now on, the logic will be added

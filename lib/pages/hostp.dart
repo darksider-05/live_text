@@ -12,6 +12,7 @@ class Hp extends StatefulWidget {
 
 class _HpState extends State<Hp> {
   bool sure = true;
+  var controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.shortestSide;
@@ -66,7 +67,7 @@ class _HpState extends State<Hp> {
                       height: trueheight * 0.5,
 
                       child: TextField(
-                        controller: TextEditingController(),
+                        controller: controller,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(border: InputBorder.none),
                         maxLines: null,
