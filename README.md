@@ -2,16 +2,15 @@
 
 ever needed to share text between phone/pc/... fast and easily?
 well, this project is just about that!
-using local area connection to share text in realtime!
+using LAN to share text in realtime!
 
-
-
-roadmap:
-making the visual app => inserting the functional logic => setting up a theming system 
-notes:
-platform permissions are not set up yet, 
-need an icon,
-will release for every platform
 
 update:
-the app is visually ready enough. from now on, the logic will be added
+the main part of the backend logic is done. 
+will set up the logic of buttons that control clipboard behaviors of the app.
+then will add the required username's logic.
+then will add the theming system.
+then set up premissions 
+then add an icon for the app
+then there is testing
+and finally, a release will be publised

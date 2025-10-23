@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_text/bottom_navigation_bar.dart';
 import 'package:live_text/pages/hostp.dart';
+import 'package:live_text/pages/joinp.dart';
 import 'package:live_text/pages/lobby.dart';
 import 'package:provider/provider.dart';
 import 'providers.dart';
@@ -10,7 +11,6 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Navigation()),
-        ChangeNotifierProvider(create: (_) => Lobby()),
         ChangeNotifierProvider(create: (_) => General()),
       ],
       child: Ma(),
@@ -24,13 +24,12 @@ class Ma extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nav = context.watch<Navigation>();
-    final router = context.watch<Lobby>();
     final general = context.watch<General>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         bottomNavigationBar: Bar(nav: nav),
-        body: Pv(nav: nav, router: router, general: general),
+        body: Pv(nav: nav, general: general),
       ),
     );
   }
@@ -38,14 +37,8 @@ class Ma extends StatelessWidget {
 
 class Pv extends StatelessWidget {
   final Navigation nav;
-  final Lobby router;
   final General general;
-  const Pv({
-    super.key,
-    required this.nav,
-    required this.router,
-    required this.general,
-  });
+  const Pv({super.key, required this.nav, required this.general});
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +47,13 @@ class Pv extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       children: [
         nav.currentpage != 1
-            ? Lb(nav: nav, router: router, general: general)
-            : Lb(nav: nav, router: router, general: general),
-        nav.currentpage == 1 ? Hp(nav: nav) : Hp(nav: nav),
+            ? general.ready
+                  ? Jp(general: general)
+                  : Lb(nav: nav, general: general)
+            : Lb(nav: nav, general: general),
+        nav.currentpage == 1
+            ? Hp(nav: nav, general: general)
+            : Hp(nav: nav, general: general),
       ],
     );
   }

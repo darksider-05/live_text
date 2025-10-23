@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class Navigation extends ChangeNotifier {
   final controller = PageController();
@@ -18,39 +17,21 @@ class Navigation extends ChangeNotifier {
   }
 }
 
-class Lobby extends ChangeNotifier {
-  List<String> hosts = ["hhhhhhhhh", "gggjydj"];
-
-  void add(String neew) {
-    hosts.add(neew);
-    _safeNotify();
-  }
-
-  void remove(String target) {
-    hosts.remove(target);
-    _safeNotify();
-  }
-
-  void clean() {
-    hosts = [];
-    _safeNotify();
-  }
-
-  void _safeNotify() {
-    if (SchedulerBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
-    } else {
-      notifyListeners();
-    }
-  }
-}
-
 class General extends ChangeNotifier {
   bool busy = false;
   String name = "";
+  String current = "";
+  bool ready = false;
+
+  void mready(int n) {
+    if (n == 0) {
+      ready = false;
+    } else if (n == 1) {
+      ready = true;
+    }
+    notifyListeners();
+  }
+
   void undo() {
     busy = !busy;
     notifyListeners();

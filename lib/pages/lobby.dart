@@ -8,14 +8,9 @@ import 'package:network_info_plus/network_info_plus.dart';
 // ignore: must_be_immutable
 class Lb extends StatefulWidget {
   final Navigation nav;
-  final Lobby router;
+
   final General general;
-  Lb({
-    super.key,
-    required this.nav,
-    required this.router,
-    required this.general,
-  });
+  Lb({super.key, required this.nav, required this.general});
 
   @override
   State<Lb> createState() => _LbState();
@@ -23,19 +18,22 @@ class Lb extends StatefulWidget {
 }
 
 class _LbState extends State<Lb> {
+  final _hosts = [];
   double progress = 0;
   int current = 0;
   int end = 254;
+
   @override
   void initState() {
     super.initState();
     final nav = widget.nav;
     if (nav.currentpage == 0) {
-      /////////////////////////////////////////////////////////////////////////// start();
+      //////////////////////////////////////////////////////// start();
     }
   }
 
   void start() async {
+    widget._udpclient?.close();
     widget._udpclient = await RawDatagramSocket.bind(
       InternetAddress.anyIPv4,
       0,
@@ -47,10 +45,9 @@ class _LbState extends State<Lb> {
           final msg = utf8.decode(dg.data);
           final lst = msg.split("|").toList();
           if (lst[0] == "pong") {
-            final target = lst[1];
-            widget.router.add(
-              "$target:50987",
-            ); // this is the port that the udp servers will be on
+            setState(() {
+              _hosts.add({"name": lst[1], "ip": lst[2]});
+            });
           }
         }
       }
@@ -58,6 +55,7 @@ class _LbState extends State<Lb> {
   }
 
   Future<void> scout(General general) async {
+    _hosts.clear();
     general.busy = true;
     final selfip = await NetworkInfo().getWifiIP() ?? "0.0.0.0";
     var iplist = selfip.split(".").toList();
@@ -72,9 +70,9 @@ class _LbState extends State<Lb> {
       widget._udpclient?.send(
         utf8.encode("ping"),
         InternetAddress("$subnet.$sub"),
-        2022,
+        50987,
       );
-      await Future.delayed(Duration(milliseconds: 5));
+      await Future.delayed(Duration(milliseconds: 15));
       setState(() {
         current += 1;
         progress = current / end;
@@ -85,13 +83,14 @@ class _LbState extends State<Lb> {
 
   @override
   void dispose() {
+    _hosts.clear();
+    widget._udpclient?.close();
+    widget._udpclient = null;
     super.dispose();
-    widget.router.clean();
   }
 
   @override
   Widget build(BuildContext context) {
-    final router = widget.router;
     var width = MediaQuery.of(context).size.shortestSide;
     var height = MediaQuery.of(context).size.longestSide;
     bool isver = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -150,7 +149,9 @@ class _LbState extends State<Lb> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    router.clean();
+                    setState(() {
+                      _hosts.clear();
+                    });
                   },
                 ),
               ],
@@ -161,10 +162,10 @@ class _LbState extends State<Lb> {
               ? LinearProgressIndicator(value: progress, color: Colors.amber)
               : Container(),
 
-          router.hosts.isNotEmpty
+          _hosts.isNotEmpty
               ? Expanded(
                   child: ListView.builder(
-                    itemCount: router.hosts.length,
+                    itemCount: _hosts.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.fromLTRB(0, 2.5, 0, 2.5),
@@ -172,24 +173,33 @@ class _LbState extends State<Lb> {
                           alignment: Alignment.topLeft,
                           child: Padding(
                             padding: EdgeInsets.only(left: truewidth * 0.05),
-                            child: Container(
-                              width: truewidth * 0.75,
-                              height: trueheight * 0.09,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.teal,
-                              ),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: truewidth * 0.15,
-                                  ),
-                                  child: Text(
-                                    router.hosts[index],
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white,
+                            child: GestureDetector(
+                              onTap: () {
+                                widget.general.current =
+                                    _hosts[index]["ip"] ?? "";
+                                widget.general.mready(1);
+                                print("s");
+                              },
+
+                              child: Container(
+                                width: truewidth * 0.75,
+                                height: trueheight * 0.09,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.teal,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: truewidth * 0.15,
+                                    ),
+                                    child: Text(
+                                      _hosts[index]["name"] ?? "",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
