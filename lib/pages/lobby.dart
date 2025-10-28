@@ -178,7 +178,6 @@ class _LbState extends State<Lb> {
                                 widget.general.current =
                                     _hosts[index]["ip"] ?? "";
                                 widget.general.mready(1);
-                                print("s");
                               },
 
                               child: Container(

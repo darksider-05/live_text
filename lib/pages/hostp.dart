@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:live_text/providers.dart';
 import 'package:network_info_plus/network_info_plus.dart';
@@ -25,6 +25,9 @@ class _HpState extends State<Hp> {
   WebSocketChannel? _client;
   bool sure = true;
   var controller = TextEditingController();
+  bool clip = false;
+
+  //TODO: implement initstate
 
   @override
   void dispose() {
@@ -121,6 +124,7 @@ class _HpState extends State<Hp> {
 
   void broadcast() {
     final message = json.encode({"hint": "FU", "content": controller.text});
+    if (clip) Clipboard.setData(ClipboardData(text: controller.text));
 
     _client?.sink.add(message);
   }
@@ -211,17 +215,22 @@ class _HpState extends State<Hp> {
                 height: trueheight * 0.1,
                 width: truewidth,
                 child: Row(
+                  spacing: truewidth * 0.01,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton.extended(
-                      onPressed:
-                          null, //////////////////////////////////////////////////
-                      label: Text("auto clipboard"),
+                      onPressed: () {
+                        setState(() {
+                          clip = !clip;
+                        });
+                      },
+                      label: Text(clip ? "copy on" : "copy off"),
                     ),
                     FloatingActionButton.extended(
-                      onPressed:
-                          null, /////////////////////////////////////////////////
-                      label: Text("copy to clipboard"),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: controller.text));
+                      },
+                      label: Text("copy text"),
                     ),
                   ],
                 ),

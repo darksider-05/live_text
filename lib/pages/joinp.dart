@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:live_text/providers.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
@@ -17,6 +18,9 @@ class Jp extends StatefulWidget {
 class _JpState extends State<Jp> {
   var controller = TextEditingController();
   WebSocketChannel? _channel;
+  bool clip = false;
+
+  //TODO: edit initstate
 
   void startclient(General general) async {
     try {
@@ -30,6 +34,7 @@ class _JpState extends State<Jp> {
           final decoded = json.decode(message);
           if (decoded["hint"] == "FU") {
             controller.text = decoded["content"];
+            if (clip) Clipboard.setData(ClipboardData(text: controller.text));
           }
         },
         onDone: () {
@@ -53,7 +58,7 @@ class _JpState extends State<Jp> {
   @override
   void initState() {
     super.initState();
-    startclient(widget.general);
+    // startclient(widget.general);
   }
 
   @override
@@ -99,6 +104,8 @@ class _JpState extends State<Jp> {
                       "content": controller.text,
                     });
                     _channel?.sink.add(message);
+                    if (clip)
+                      Clipboard.setData(ClipboardData(text: controller.text));
                   },
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(border: InputBorder.none),
@@ -115,17 +122,22 @@ class _JpState extends State<Jp> {
           height: trueheight * 0.1,
           width: truewidth,
           child: Row(
+            spacing: truewidth * 0.01,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton.extended(
-                onPressed:
-                    null, //////////////////////////////////////////////////
-                label: Text("auto clipboard"),
+                onPressed: () {
+                  setState(() {
+                    clip = !clip;
+                  });
+                },
+                label: Text(clip ? "copy on" : "copy off"),
               ),
               FloatingActionButton.extended(
-                onPressed:
-                    null, /////////////////////////////////////////////////
-                label: Text("copy to clipboard"),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: controller.text));
+                },
+                label: Text("copy text"),
               ),
             ],
           ),
