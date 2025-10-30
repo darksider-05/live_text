@@ -159,7 +159,10 @@ class _LbState extends State<Lb> {
           ),
 
           widget.general.busy
-              ? LinearProgressIndicator(value: progress, color: Colors.amber)
+              ? LinearProgressIndicator(
+                  value: progress,
+                  color: Colors.deepPurple,
+                )
               : Container(),
 
           _hosts.isNotEmpty

@@ -37,6 +37,7 @@ dependencies:
   provider: ^6.1.5+1
   network_info_plus: ^7.0.0
   shelf_web_socket: ^3.0.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
