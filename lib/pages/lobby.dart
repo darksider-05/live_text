@@ -8,17 +8,25 @@ import 'package:network_info_plus/network_info_plus.dart';
 // ignore: must_be_immutable
 class Lb extends StatefulWidget {
   final Navigation nav;
-
   final General general;
-  Lb({super.key, required this.nav, required this.general});
+  final Palette theme;
+  Lb({
+    super.key,
+    required this.nav,
+    required this.general,
+    required this.theme,
+  });
 
   @override
   State<Lb> createState() => _LbState();
-  RawDatagramSocket? _udpclient;
 }
 
 class _LbState extends State<Lb> {
-  final _hosts = [];
+  //TODO: remove the test user later
+  RawDatagramSocket? _udpclient;
+  final _hosts = [
+    {"name": "test", "ip": ""},
+  ];
   double progress = 0;
   int current = 0;
   int end = 254;
@@ -28,19 +36,16 @@ class _LbState extends State<Lb> {
     super.initState();
     final nav = widget.nav;
     if (nav.currentpage == 0) {
-      //////////////////////////////////////////////////////// start();
+      //////////////////////////////////////////////////////// start
     }
   }
 
   void start() async {
-    widget._udpclient?.close();
-    widget._udpclient = await RawDatagramSocket.bind(
-      InternetAddress.anyIPv4,
-      0,
-    );
-    widget._udpclient?.listen((event) {
+    _udpclient?.close();
+    _udpclient = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
+    _udpclient?.listen((event) {
       if (event == RawSocketEvent.read) {
-        final dg = widget._udpclient?.receive();
+        final dg = _udpclient?.receive();
         if (dg != null) {
           final msg = utf8.decode(dg.data);
           final lst = msg.split("|").toList();
@@ -67,7 +72,7 @@ class _LbState extends State<Lb> {
     });
 
     await Future.forEach<int>(List.generate(254, (i) => i + 1), (sub) async {
-      widget._udpclient?.send(
+      _udpclient?.send(
         utf8.encode("ping"),
         InternetAddress("$subnet.$sub"),
         50987,
@@ -84,8 +89,9 @@ class _LbState extends State<Lb> {
   @override
   void dispose() {
     _hosts.clear();
-    widget._udpclient?.close();
-    widget._udpclient = null;
+    _udpclient?.close();
+    _udpclient = null;
+    widget.general.busy = false;
     super.dispose();
   }
 
@@ -102,13 +108,14 @@ class _LbState extends State<Lb> {
     return Container(
       width: truewidth,
       height: trueheight,
-      color: Colors.black87,
+      color: widget.theme.current!["background"],
       child: Column(
+        spacing: trueheight * 0.01,
         children: [
           SizedBox(height: trueheight * 0.1),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white30,
+              color: widget.theme.current!["bgtint"],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -121,11 +128,11 @@ class _LbState extends State<Lb> {
                   icon: Icon(
                     Icons.flip_camera_android_sharp,
                     size: 28,
-                    color: Colors.white,
+                    color: widget.theme.current!["text"],
                   ),
                   onPressed: () async {
                     ///////////////////////////////////////////////////////////general.busy ? null :scout(widget.general);
-
+                    // TODO: remove test and add the main part
                     ///test start
                     current = 0;
                     progress = 0;
@@ -146,7 +153,7 @@ class _LbState extends State<Lb> {
                   icon: Icon(
                     Icons.clear_all_rounded,
                     size: 28,
-                    color: Colors.white,
+                    color: widget.theme.current!["text"],
                   ),
                   onPressed: () {
                     setState(() {
@@ -160,8 +167,9 @@ class _LbState extends State<Lb> {
 
           widget.general.busy
               ? LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
                   value: progress,
-                  color: Colors.deepPurple,
+                  color: widget.theme.primary,
                 )
               : Container(),
 
@@ -188,7 +196,7 @@ class _LbState extends State<Lb> {
                                 height: trueheight * 0.09,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: Colors.teal,
+                                  color: widget.theme.current!["secondary"],
                                 ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
@@ -200,7 +208,7 @@ class _LbState extends State<Lb> {
                                       _hosts[index]["name"] ?? "",
                                       style: TextStyle(
                                         fontSize: 20,
-                                        color: Colors.white,
+                                        color: widget.theme.current!["text"],
                                       ),
                                     ),
                                   ),
@@ -213,42 +221,39 @@ class _LbState extends State<Lb> {
                     },
                   ),
                 )
-              : Padding(
-                  padding: EdgeInsets.only(top: trueheight * 0.01),
-                  child: Container(
-                    width: truewidth * 0.75,
-                    height: trueheight * 0.09,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.teal,
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: truewidth * 0.15),
-                        child: Row(
-                          children: [
-                            Text(
-                              "press the ",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
+              : Container(
+                  width: truewidth * 0.75,
+                  height: trueheight * 0.09,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: widget.theme.current!["secondary"],
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: truewidth * 0.15),
+                      child: Row(
+                        children: [
+                          Text(
+                            "press the ",
+                            style: TextStyle(
+                              color: widget.theme.current!["text"],
+                              fontSize: 16,
                             ),
-                            Icon(
-                              Icons.flip_camera_android_rounded,
-                              color: Colors.white,
-                              size: 22,
+                          ),
+                          Icon(
+                            Icons.flip_camera_android_rounded,
+                            color: widget.theme.current!["text"],
+                            size: 22,
+                          ),
+                          Text(
+                            " icon to search",
+                            style: TextStyle(
+                              color: widget.theme.current!["text"],
+                              fontSize: 16,
                             ),
-                            Text(
-                              " icon to search",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -6,9 +6,15 @@ import 'package:live_text/names.dart';
 
 class Sp extends StatefulWidget {
   final General general;
+  final Palette theme;
   final Navigation navigation;
 
-  const Sp({super.key, required this.general, required this.navigation});
+  const Sp({
+    super.key,
+    required this.general,
+    required this.navigation,
+    required this.theme,
+  });
 
   @override
   State<Sp> createState() => _SpState();
@@ -19,10 +25,16 @@ class _SpState extends State<Sp> {
   int second = 0;
   FixedExtentScrollController? _controller1;
   FixedExtentScrollController? _controller2;
+  void saven() async {
+    final settings = await SharedPreferences.getInstance();
+    await settings.setString(
+      "name",
+      "${widget.general.name}|${widget.general.firstName}|${widget.general.lastName}",
+    );
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     first = widget.general.firstName;
     second = widget.general.lastName;
@@ -40,13 +52,8 @@ class _SpState extends State<Sp> {
         ? height - kBottomNavigationBarHeight
         : width - kBottomNavigationBarHeight;
 
-    void saven() async {
-      final settings = await SharedPreferences.getInstance();
-      await settings.setString("name", widget.general.name);
-    }
-
     return Container(
-      color: Color(0xFFEDD607),
+      color: widget.theme.current!["background"],
       child: Column(
         spacing: truewidth * 0.02,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -67,11 +74,19 @@ class _SpState extends State<Sp> {
                   onSelectedItemChanged: (index) {
                     first = index;
                     widget.general.firstName = index;
+                    widget.general.updateNameFromIndices();
                     saven();
                   },
                   children: techWords
                       .map(
-                        (val) => Center(child: Text(val, style: TextStyle())),
+                        (val) => Center(
+                          child: Text(
+                            val,
+                            style: TextStyle(
+                              color: widget.theme.current!["text"],
+                            ),
+                          ),
+                        ),
                       )
                       .toList(),
                 ),
@@ -87,18 +102,70 @@ class _SpState extends State<Sp> {
                   onSelectedItemChanged: (index) {
                     second = index;
                     widget.general.lastName = index;
+                    widget.general.updateNameFromIndices();
                     saven();
                   },
                   children: natureWords
                       .map(
-                        (val) => Center(child: Text(val, style: TextStyle())),
+                        (val) => Center(
+                          child: Text(
+                            val,
+                            style: TextStyle(
+                              color: widget.theme.current!["text"],
+                            ),
+                          ),
+                        ),
                       )
                       .toList(),
                 ),
               ),
             ],
           ),
+
+          SizedBox(height: truewidth * 0.1),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  widget.theme.mb();
+                  final settings = await SharedPreferences.getInstance();
+                  await settings.setString("theme", "bright");
+                },
+                icon: Row(
+                  children: [
+                    Icon(Icons.circle, color: Color(0xffcfcfcf)),
+                    Text(
+                      " bright theme",
+                      style: TextStyle(color: Color(0xffcfcfcf)),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  widget.theme.md();
+                  final settings = await SharedPreferences.getInstance();
+                  await settings.setString("theme", "dark");
+                },
+                icon: Row(
+                  children: [
+                    Icon(Icons.circle, color: Color(0xff303030)),
+                    Text(
+                      " dark theme",
+                      style: TextStyle(color: Color(0xff303030)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                widget.theme.current!["accent"],
+              ),
+            ),
             onPressed: () {
               setState(() {
                 widget.general.initName(); // updates firstName and lastName
@@ -119,11 +186,15 @@ class _SpState extends State<Sp> {
               saven();
             },
 
-            child: Icon(Icons.casino),
+            child: Icon(Icons.casino, color: widget.theme.current!["text"]),
           ),
 
           FloatingActionButton(
-            child: Text("Done"),
+            backgroundColor: widget.theme.current!["primary"],
+            child: Text(
+              "Done",
+              style: TextStyle(color: widget.theme.current!["text"]),
+            ),
             onPressed: () {
               widget.general.unset();
             },

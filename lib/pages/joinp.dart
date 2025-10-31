@@ -9,7 +9,8 @@ import 'package:web_socket_channel/io.dart';
 // ignore: must_be_immutable
 class Jp extends StatefulWidget {
   General general;
-  Jp({super.key, required this.general});
+  Palette theme;
+  Jp({super.key, required this.general, required this.theme});
 
   @override
   State<Jp> createState() => _JpState();
@@ -19,8 +20,6 @@ class _JpState extends State<Jp> {
   var controller = TextEditingController();
   WebSocketChannel? _channel;
   bool clip = false;
-
-  //TODO: edit initstate
 
   void startclient(General general) async {
     try {
@@ -56,6 +55,7 @@ class _JpState extends State<Jp> {
   }
 
   @override
+  //TODO: edit initstate
   void initState() {
     super.initState();
     // startclient(widget.general);
@@ -81,7 +81,7 @@ class _JpState extends State<Jp> {
     return Stack(
       children: [
         Container(
-          color: Colors.black87,
+          color: widget.theme.current!["background"],
           height: trueheight,
           width: truewidth,
           child: Transform.translate(
@@ -90,7 +90,7 @@ class _JpState extends State<Jp> {
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white10,
+                  color: widget.theme.current!["bgtint"],
                   borderRadius: BorderRadius.circular(20),
                 ),
                 width: truewidth * 0.65,
@@ -104,10 +104,12 @@ class _JpState extends State<Jp> {
                       "content": controller.text,
                     });
                     _channel?.sink.add(message);
-                    if (clip)
+                    if (clip) {
                       Clipboard.setData(ClipboardData(text: controller.text));
+                    }
                   },
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: widget.theme.current!["text"]),
+                  cursorColor: widget.theme.primary,
                   decoration: InputDecoration(border: InputBorder.none),
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
@@ -126,18 +128,28 @@ class _JpState extends State<Jp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton.extended(
+                backgroundColor: clip
+                    ? widget.theme.current!["primary"]
+                    : widget.theme.current!["accent"],
                 onPressed: () {
                   setState(() {
                     clip = !clip;
                   });
                 },
-                label: Text(clip ? "copy on" : "copy off"),
+                label: Text(
+                  clip ? "copy on" : "copy off",
+                  style: TextStyle(color: widget.theme.current!["text"]),
+                ),
               ),
               FloatingActionButton.extended(
+                backgroundColor: widget.theme.current!["secondary"],
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: controller.text));
                 },
-                label: Text("copy text"),
+                label: Text(
+                  "copy text",
+                  style: TextStyle(color: widget.theme.current!["text"]),
+                ),
               ),
             ],
           ),
@@ -150,7 +162,10 @@ class _JpState extends State<Jp> {
             onPressed: () {
               widget.general.mready(0);
             },
-            icon: Icon(Icons.arrow_back_rounded),
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: widget.theme.current!["text"],
+            ),
           ),
         ),
       ],

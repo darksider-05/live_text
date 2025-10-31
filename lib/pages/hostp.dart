@@ -13,7 +13,13 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 class Hp extends StatefulWidget {
   Navigation nav;
   General general;
-  Hp({super.key, required this.nav, required this.general});
+  Palette theme;
+  Hp({
+    super.key,
+    required this.nav,
+    required this.general,
+    required this.theme,
+  });
 
   @override
   State<Hp> createState() => _HpState();
@@ -143,23 +149,40 @@ class _HpState extends State<Hp> {
         ? Container(
             width: truewidth,
             height: trueheight,
-            color: Colors.blueGrey[800],
+            color: widget.theme.current!["primary"],
             child: Column(
               spacing: 10,
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(width: truewidth),
-                Text("start hosting?"),
-                FloatingActionButton(
-                  onPressed: () {
-                    setState(() {
-                      sure = false;
-                    });
-                    //startTcp();
-                    //startUdp();
-                  },
-                  child: Text("yes"),
+                Text(
+                  "start hosting?",
+                  style: TextStyle(color: widget.theme.current!["text"]),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: widget.theme.current!["bgtint"],
+                  ),
+                  width: truewidth * 0.1,
+                  height: truewidth * 0.1,
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        sure = false;
+                      });
+                      //startTcp();
+                      //startUdp();
+                    },
+                    icon: Text(
+                      "yes",
+                      style: TextStyle(
+                        color: widget.theme.current!["text"],
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -167,7 +190,7 @@ class _HpState extends State<Hp> {
         : Stack(
             children: [
               Container(
-                color: Colors.black87,
+                color: widget.theme.current!["background"],
                 height: trueheight,
                 width: truewidth,
                 child: Transform.translate(
@@ -176,7 +199,7 @@ class _HpState extends State<Hp> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white10,
+                        color: widget.theme.current!["bgtint"],
                         borderRadius: BorderRadius.circular(20),
                       ),
                       width: truewidth * 0.65,
@@ -187,7 +210,8 @@ class _HpState extends State<Hp> {
                         onChanged: (value) {
                           broadcast();
                         },
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: widget.theme.current!["text"]),
+                        cursorColor: widget.theme.primary,
                         decoration: InputDecoration(border: InputBorder.none),
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
@@ -204,7 +228,7 @@ class _HpState extends State<Hp> {
                   children: [
                     Text(
                       _client != null ? "connected" : "no device connected",
-                      style: TextStyle(color: Colors.tealAccent),
+                      style: TextStyle(color: widget.theme.primary),
                     ),
                   ],
                 ),
@@ -219,18 +243,28 @@ class _HpState extends State<Hp> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton.extended(
+                      backgroundColor: clip
+                          ? widget.theme.current!["primary"]
+                          : widget.theme.current!["accent"],
                       onPressed: () {
                         setState(() {
                           clip = !clip;
                         });
                       },
-                      label: Text(clip ? "copy on" : "copy off"),
+                      label: Text(
+                        clip ? "copy on" : "copy off",
+                        style: TextStyle(color: widget.theme.current!["text"]),
+                      ),
                     ),
                     FloatingActionButton.extended(
+                      backgroundColor: widget.theme.current!["secondary"],
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: controller.text));
                       },
-                      label: Text("copy text"),
+                      label: Text(
+                        "copy text",
+                        style: TextStyle(color: widget.theme.current!["text"]),
+                      ),
                     ),
                   ],
                 ),

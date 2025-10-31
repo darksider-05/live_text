@@ -14,6 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => Navigation()),
         ChangeNotifierProvider(create: (_) => General()),
+        ChangeNotifierProvider(create: (_) => Palette()),
       ],
       child: Ma(),
     ),
@@ -27,9 +28,10 @@ class Ma extends StatelessWidget {
   Widget build(BuildContext context) {
     final nav = context.watch<Navigation>();
     final general = context.watch<General>();
+    final theme = context.watch<Palette>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scf(nav: nav, general: general),
+      home: Scf(nav: nav, general: general, theme: theme),
     );
   }
 }
@@ -37,7 +39,13 @@ class Ma extends StatelessWidget {
 class Scf extends StatefulWidget {
   final Navigation nav;
   final General general;
-  const Scf({super.key, required this.nav, required this.general});
+  final Palette theme;
+  const Scf({
+    super.key,
+    required this.nav,
+    required this.general,
+    required this.theme,
+  });
 
   @override
   State<Scf> createState() => _ScfState();
@@ -46,29 +54,31 @@ class Scf extends StatefulWidget {
 class _ScfState extends State<Scf> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    saveLoad(widget.general);
+    saveLoad(widget.general, widget.theme);
   }
 
-  Future<void> saveLoad(General general) async {
+  Future<void> saveLoad(General general, Palette theme) async {
     //TODO: not complete: colors
     final settings = await SharedPreferences.getInstance();
     List name = await settings.getString("name")?.split("|") ?? ["", "", ""];
-    String color = await settings.getString("colors") ?? "";
+    String color = await settings.getString("theme") ?? "";
     general.initName();
     general.setName(name[0], name[1], name[2]);
     await settings.setString(
       "name",
       "${general.name}|${general.firstName}|${general.lastName}",
     );
+    theme.setColor(color);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: !widget.general.setf ? Bar(nav: widget.nav) : null,
-      body: Pv(nav: widget.nav, general: widget.general),
+      bottomNavigationBar: !widget.general.setf
+          ? Bar(nav: widget.nav, theme: widget.theme)
+          : null,
+      body: Pv(nav: widget.nav, general: widget.general, theme: widget.theme),
     );
   }
 }
@@ -76,7 +86,13 @@ class _ScfState extends State<Scf> {
 class Pv extends StatefulWidget {
   final Navigation nav;
   final General general;
-  const Pv({super.key, required this.nav, required this.general});
+  final Palette theme;
+  const Pv({
+    super.key,
+    required this.nav,
+    required this.general,
+    required this.theme,
+  });
 
   @override
   State<Pv> createState() => _PvState();
@@ -102,12 +118,28 @@ class _PvState extends State<Pv> {
                 children: [
                   widget.nav.currentpage != 1
                       ? widget.general.ready
-                            ? Jp(general: widget.general)
-                            : Lb(nav: widget.nav, general: widget.general)
-                      : Lb(nav: widget.nav, general: widget.general),
+                            ? Jp(general: widget.general, theme: widget.theme)
+                            : Lb(
+                                nav: widget.nav,
+                                general: widget.general,
+                                theme: widget.theme,
+                              )
+                      : Lb(
+                          nav: widget.nav,
+                          general: widget.general,
+                          theme: widget.theme,
+                        ),
                   widget.nav.currentpage == 1
-                      ? Hp(nav: widget.nav, general: widget.general)
-                      : Hp(nav: widget.nav, general: widget.general),
+                      ? Hp(
+                          nav: widget.nav,
+                          general: widget.general,
+                          theme: widget.theme,
+                        )
+                      : Hp(
+                          nav: widget.nav,
+                          general: widget.general,
+                          theme: widget.theme,
+                        ),
                 ],
               )
             : Container(),
@@ -120,13 +152,20 @@ class _PvState extends State<Pv> {
                   onPressed: () {
                     widget.general.unset();
                   },
-                  icon: Icon(Icons.settings, color: Colors.white),
+                  icon: Icon(
+                    Icons.settings,
+                    color: widget.theme.current!["text"],
+                  ),
                 ),
               )
             : Container(),
 
         widget.general.setf
-            ? Sp(general: widget.general, navigation: widget.nav)
+            ? Sp(
+                general: widget.general,
+                navigation: widget.nav,
+                theme: widget.theme,
+              )
             : Container(),
       ],
     );
