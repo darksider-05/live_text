@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.github.darksider_05.livetext.live_text" "\0"
-            VALUE "FileDescription", "live_text" "\0"
+            VALUE "FileDescription", "LiveText" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "live_text" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.github.darksider_05.livetext.live_text. All rights reserved." "\0"
             VALUE "OriginalFilename", "live_text.exe" "\0"
-            VALUE "ProductName", "live_text" "\0"
+            VALUE "ProductName", "LiveText" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

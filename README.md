@@ -102,9 +102,9 @@ the required username's logic is added.
 
 the theming system is done, with the saving logic, several bugs were fixed.
 
-next, will set up premissions 
+premissions are set 
 
-then add an icon for the app
+next will add an icon for the app
 
 then there is testing
 
