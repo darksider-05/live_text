@@ -35,17 +35,6 @@ class _HpState extends State<Hp> {
   bool clip = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    if (widget.nav.currentpage == 1) {
-      startTcp();
-      startUdp();
-    }
-  }
-
-  @override
   void dispose() {
     _client?.sink.close();
 
@@ -182,8 +171,8 @@ class _HpState extends State<Hp> {
                       setState(() {
                         sure = false;
                       });
-                      //startTcp();
-                      //startUdp();
+                      startTcp();
+                      startUdp();
                     },
                     icon: Text(
                       "yes",

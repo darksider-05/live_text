@@ -180,7 +180,7 @@ class _LbState extends State<Lb> {
                                 height: trueheight * 0.09,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: widget.theme.current!["secondary"],
+                                  color: widget.theme.current!["notp"],
                                 ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
@@ -210,7 +210,7 @@ class _LbState extends State<Lb> {
                   height: trueheight * 0.09,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: widget.theme.current!["secondary"],
+                    color: widget.theme.current!["primary"],
                   ),
                   child: Align(
                     alignment: Alignment.centerLeft,
