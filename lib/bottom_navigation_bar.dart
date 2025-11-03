@@ -20,7 +20,7 @@ class Bar extends StatelessWidget {
         backgroundColor: theme.current!["background"]?.withAlpha(200),
         enableFeedback: false,
         currentIndex: nav.currentpage,
-        selectedItemColor: theme.current!["text"],
+        selectedItemColor: theme.current!["primary"],
         unselectedItemColor: theme.current!["untext"],
         onTap: (value) {
           nav.changepage(value);

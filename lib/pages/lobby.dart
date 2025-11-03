@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:live_text/providers.dart';
+import 'package:livetext/providers.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
 // ignore: must_be_immutable

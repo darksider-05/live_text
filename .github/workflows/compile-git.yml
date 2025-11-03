@@ -118,31 +118,32 @@ jobs:
           name: linux-build-app
           path: build/linux/x64/release/bundle/
 
-  build-ios:
-    runs-on: macos-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.35.7'
-
-      - name: Enable iOS
-        run: flutter config --enable-ios
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      # Note: Code signing is skipped here for simplicity.
-      # If you need to sign for App Store/TestFlight, add provisioning profiles and signing setup.
-      - name: Build iOS app (no codesign)
-        run: flutter build ios --release --no-codesign
-
-      - name: Upload iOS build
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-build-app
-          path: build/ios/iphoneos/
+#  build-ios:
+#    runs-on: macos-latest
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.35.7'
+#
+#      - name: Enable iOS
+#        run: flutter config --enable-ios
+#
+#      - name: Get dependencies
+#        run: flutter pub get
+#
+#      # Note: Code signing is skipped here for simplicity.
+#      # If you need to sign for App Store/TestFlight, add provisioning profiles and signing setup.
+#      - name: Build iOS app (no codesign)
+#        run: flutter build ios --release --no-codesign
+#
+#      - name: Upload iOS build
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ios-build-app
+#          path: build/ios/iphoneos/
+#

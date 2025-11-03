@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../providers.dart';
-import 'package:live_text/names.dart';
+import 'package:livetext/names.dart';
 
 class Sp extends StatefulWidget {
   final General general;
@@ -163,7 +163,9 @@ class _SpState extends State<Sp> {
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
-                widget.theme.current!["accent"],
+                !widget.theme.dark
+                    ? widget.theme.current!["secondary"]
+                    : widget.theme.current!["accent"],
               ),
             ),
             onPressed: () {

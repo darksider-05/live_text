@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:live_text/bottom_navigation_bar.dart';
-import 'package:live_text/pages/hostp.dart';
-import 'package:live_text/pages/joinp.dart';
-import 'package:live_text/pages/lobby.dart';
-import 'package:live_text/pages/setp.dart';
+import 'package:livetext/bottom_navigation_bar.dart';
+import 'package:livetext/pages/hostp.dart';
+import 'package:livetext/pages/joinp.dart';
+import 'package:livetext/pages/lobby.dart';
+import 'package:livetext/pages/setp.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers.dart';
@@ -154,6 +154,7 @@ class _PvState extends State<Pv> {
                 child: IconButton(
                   onPressed: () {
                     widget.general.unset();
+                    widget.nav.changepage(0);
                   },
                   icon: Icon(
                     Icons.settings,
