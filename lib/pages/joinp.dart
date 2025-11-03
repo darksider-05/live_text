@@ -63,9 +63,7 @@ class _JpState extends State<Jp> {
   @override
   void initState() {
     super.initState();
-    if (widget.nav.currentpage == 1) {
-      startclient(widget.general);
-    }
+    startclient(widget.general);
   }
 
   @override
