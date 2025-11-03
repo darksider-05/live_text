@@ -17,7 +17,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.35.7'
           architecture: x64
 
       - name: Enable Windows desktop
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.35.7'
 
       - name: Get dependencies
         run: flutter pub get
@@ -69,7 +69,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.35.7'
 
       - name: Enable macOS desktop
         run: flutter config --enable-macos-desktop
@@ -96,7 +96,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.35.7'
 
       - name: Enable Linux desktop
         run: flutter config --enable-linux-desktop
@@ -128,7 +128,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          flutter-version: '3.35.7'
 
       - name: Enable iOS
         run: flutter config --enable-ios
