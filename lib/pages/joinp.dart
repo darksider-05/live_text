@@ -8,9 +8,15 @@ import 'package:web_socket_channel/io.dart';
 
 // ignore: must_be_immutable
 class Jp extends StatefulWidget {
+  Navigation nav;
   General general;
   Palette theme;
-  Jp({super.key, required this.general, required this.theme});
+  Jp({
+    super.key,
+    required this.nav,
+    required this.general,
+    required this.theme,
+  });
 
   @override
   State<Jp> createState() => _JpState();
@@ -57,7 +63,9 @@ class _JpState extends State<Jp> {
   @override
   void initState() {
     super.initState();
-    startclient(widget.general);
+    if (widget.nav.currentpage == 1) {
+      startclient(widget.general);
+    }
   }
 
   @override

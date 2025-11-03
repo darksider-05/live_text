@@ -23,7 +23,7 @@ class Lb extends StatefulWidget {
 
 class _LbState extends State<Lb> {
   RawDatagramSocket? _udpclient;
-  final _hosts = [{}];
+  final _hosts = [];
   double progress = 0;
   int current = 0;
   int end = 254;

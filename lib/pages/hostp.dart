@@ -38,8 +38,11 @@ class _HpState extends State<Hp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    startTcp();
-    startUdp();
+
+    if (widget.nav.currentpage == 1) {
+      startTcp();
+      startUdp();
+    }
   }
 
   @override

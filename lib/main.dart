@@ -117,7 +117,11 @@ class _PvState extends State<Pv> {
                 children: [
                   widget.nav.currentpage != 1
                       ? widget.general.ready
-                            ? Jp(general: widget.general, theme: widget.theme)
+                            ? Jp(
+                                nav: widget.nav,
+                                general: widget.general,
+                                theme: widget.theme,
+                              )
                             : Lb(
                                 nav: widget.nav,
                                 general: widget.general,
