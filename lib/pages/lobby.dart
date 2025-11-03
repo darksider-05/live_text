@@ -22,11 +22,8 @@ class Lb extends StatefulWidget {
 }
 
 class _LbState extends State<Lb> {
-  //TODO: remove the test user later
   RawDatagramSocket? _udpclient;
-  final _hosts = [
-    {"name": "test", "ip": ""},
-  ];
+  final _hosts = [{}];
   double progress = 0;
   int current = 0;
   int end = 254;
@@ -36,7 +33,7 @@ class _LbState extends State<Lb> {
     super.initState();
     final nav = widget.nav;
     if (nav.currentpage == 0) {
-      //////////////////////////////////////////////////////// start
+      start();
     }
   }
 
@@ -128,25 +125,12 @@ class _LbState extends State<Lb> {
                   icon: Icon(
                     Icons.flip_camera_android_sharp,
                     size: 28,
-                    color: widget.theme.current!["text"],
+                    color: widget.general.busy
+                        ? widget.theme.current!["primary"]
+                        : widget.theme.current!["text"],
                   ),
                   onPressed: () async {
-                    ///////////////////////////////////////////////////////////general.busy ? null :scout(widget.general);
-                    // TODO: remove test and add the main part
-                    ///test start
-                    current = 0;
-                    progress = 0;
-                    widget.general.busy = true;
-                    for (int i = 0; i < 255; i++) {
-                      await Future.delayed(const Duration(milliseconds: 40));
-                      setState(() {
-                        current += 1;
-                        progress = current / end;
-                      });
-                    }
-                    widget.general.busy = false;
-
-                    /// test end
+                    widget.general.busy ? null : scout(widget.general);
                   },
                 ),
                 IconButton(

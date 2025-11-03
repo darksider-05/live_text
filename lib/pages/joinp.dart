@@ -55,10 +55,9 @@ class _JpState extends State<Jp> {
   }
 
   @override
-  //TODO: edit initstate
   void initState() {
     super.initState();
-    // startclient(widget.general);
+    startclient(widget.general);
   }
 
   @override

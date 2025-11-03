@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:live_text/providers.dart';
@@ -33,7 +34,13 @@ class _HpState extends State<Hp> {
   var controller = TextEditingController();
   bool clip = false;
 
-  //TODO: implement initstate
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTcp();
+    startUdp();
+  }
 
   @override
   void dispose() {
@@ -165,8 +172,8 @@ class _HpState extends State<Hp> {
                     borderRadius: BorderRadius.circular(100),
                     color: widget.theme.current!["bgtint"],
                   ),
-                  width: truewidth * 0.1,
-                  height: truewidth * 0.1,
+                  width: (min(truewidth, trueheight) * 0.2),
+                  height: (min(truewidth, trueheight) * 0.2),
                   child: IconButton(
                     onPressed: () {
                       setState(() {

@@ -59,10 +59,9 @@ class _ScfState extends State<Scf> {
   }
 
   Future<void> saveLoad(General general, Palette theme) async {
-    //TODO: not complete: colors
     final settings = await SharedPreferences.getInstance();
-    List name = await settings.getString("name")?.split("|") ?? ["", "", ""];
-    String color = await settings.getString("theme") ?? "";
+    List name = settings.getString("name")?.split("|") ?? ["", "", ""];
+    String color = settings.getString("theme") ?? "";
     general.initName();
     general.setName(name[0], name[1], name[2]);
     await settings.setString(
