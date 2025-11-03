@@ -43,20 +43,38 @@ class _JpState extends State<Jp> {
           }
         },
         onDone: () {
-          setState(() {
-            general.ready = false;
-          });
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("The Host Stopped Hosting"),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+          general.mready(0);
         },
         onError: (error) {
-          setState(() {
-            general.ready = false;
-          });
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Couldn't connect"),
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+          general.mready(0);
         },
       );
     } catch (e) {
-      setState(() {
-        general.ready = false;
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Something Went WRONG"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      general.mready(0);
     }
   }
 
@@ -137,9 +155,11 @@ class _JpState extends State<Jp> {
                     ? widget.theme.current!["primary"]
                     : widget.theme.current!["accent"],
                 onPressed: () {
-                  setState(() {
-                    clip = !clip;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      clip = !clip;
+                    });
+                  }
                 },
                 label: Text(
                   clip ? "copy on" : "copy off",
