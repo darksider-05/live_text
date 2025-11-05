@@ -104,8 +104,8 @@ the theming system is done, with the saving logic, several bugs were fixed.
 
 premissions are set 
 
-next will add an icon for the app
+an icon is added for the app
 
-then there is testing
+testing is ongoing
 
 and finally, a release will be publised

@@ -56,10 +56,33 @@ class _LbState extends State<Lb> {
     });
   }
 
+  Future<String> getip() async {
+    try {
+      final socket = await Socket.connect(
+        "1.2.3.4",
+        99,
+        timeout: Duration(seconds: 1),
+      );
+      final localIp = socket.address.address;
+      await socket.close();
+      return localIp;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("this is a fail to get the ip from a socket"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return "0.0.0.0";
+    }
+  }
+
   Future<void> scout(General general) async {
     _hosts.clear();
     general.busy = true;
-    final selfip = await NetworkInfo().getWifiIP() ?? "0.0.0.0";
+    final selfip = await NetworkInfo().getWifiIP() ?? await getip();
     var iplist = selfip.split(".").toList();
     iplist = iplist.sublist(0, 3);
     final subnet = iplist.join(".");
@@ -189,7 +212,9 @@ class _LbState extends State<Lb> {
                                       left: truewidth * 0.15,
                                     ),
                                     child: Text(
-                                      _hosts[index]["name"] ?? "",
+                                      _hosts[index]["ip"] != "0.0.0.0"
+                                          ? _hosts[index]["name"] ?? "error"
+                                          : "self ip error on host't side",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: widget.theme.current!["text"],

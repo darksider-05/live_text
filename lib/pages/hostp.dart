@@ -105,7 +105,7 @@ class _HpState extends State<Hp> {
   }
 
   void startUdp() async {
-    final selfip = await NetworkInfo().getWifiIP() ?? "0.0.0.0";
+    final selfip = await NetworkInfo().getWifiIP() ?? await getip();
     _udpserver?.close();
     _udpserver = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 50987);
     _udpserver?.listen((event) {
@@ -125,6 +125,29 @@ class _HpState extends State<Hp> {
         }
       }
     });
+  }
+
+  Future<String> getip() async {
+    try {
+      final socket = await Socket.connect(
+        "1.2.3.4",
+        99,
+        timeout: Duration(seconds: 1),
+      );
+      final localIp = socket.address.address;
+      await socket.close();
+      return localIp;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("this is a fail to get the ip from a socket"),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+      return "0.0.0.0";
+    }
   }
 
   void broadcast() {
