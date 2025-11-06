@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:livetext/ipgetter.dart';
 import 'package:livetext/providers.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:shelf_web_socket/shelf_web_socket.dart';
@@ -46,22 +47,31 @@ class _HpState extends State<Hp> {
     super.dispose();
   }
 
+  ///  starts the websocket server <br>
+  ///  stops the upd server also, not lettign others connect to it.<br>
+  ///  if the someone was connected before, no one will be allowed to connect
+  ///
   void startTcp() async {
+    // initializes the handler to set up the websocket server
     final handler = webSocketHandler((WebSocketChannel channel, _) {
-      // A new client has connected!
-      setState(() {
-        _client = channel;
-      });
+      // when a new client connects:
+      if (_client == null) {
+        _udpserver?.close();
+        _udpserver = null;
 
-      // Send the current text to the new client
-      final initialMessage = json.encode({
-        "hint": "FU",
-        "content": controller.text,
-      });
-      channel.sink.add(initialMessage);
-      _udpserver?.close();
-      _udpserver = null;
+        setState(() {
+          _client = channel;
+        });
 
+        // Send the current text to the new client
+        final initialMessage = json.encode({
+          "hint": "FU",
+          "content": controller.text,
+        });
+        channel.sink.add(initialMessage);
+      }
+
+      // listes for incoming messages:
       channel.stream.listen(
         (message) {
           final decoded = jsonDecode(message);
@@ -73,7 +83,7 @@ class _HpState extends State<Hp> {
           }
         },
 
-        // 3. Handle the client disconnecting
+        // handles the client disconnecting
         onDone: () {
           setState(() {
             _client = null;
@@ -84,7 +94,7 @@ class _HpState extends State<Hp> {
           }
         },
         onError: (error) {
-          // Handle errors and remove the client
+          // handles errors and remove the client:
           setState(() {
             _client = null;
           });
@@ -105,7 +115,19 @@ class _HpState extends State<Hp> {
   }
 
   void startUdp() async {
-    final selfip = await NetworkInfo().getWifiIP() ?? await getip();
+    final selfip = await NetworkInfo().getWifiIP() ?? LocalIp.get();
+    if (selfip.toString() == "0.0.0.0") {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "something went wrong with getting the ip, please retry",
+            ),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    }
     _udpserver?.close();
     _udpserver = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 50987);
     _udpserver?.listen((event) {
@@ -125,29 +147,6 @@ class _HpState extends State<Hp> {
         }
       }
     });
-  }
-
-  Future<String> getip() async {
-    try {
-      final socket = await Socket.connect(
-        "1.2.3.4",
-        99,
-        timeout: Duration(seconds: 1),
-      );
-      final localIp = socket.address.address;
-      await socket.close();
-      return localIp;
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("this is a fail to get the ip from a socket"),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
-      return "0.0.0.0";
-    }
   }
 
   void broadcast() {

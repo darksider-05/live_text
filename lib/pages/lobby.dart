@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:livetext/ipgetter.dart';
 import 'package:livetext/providers.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 
@@ -56,33 +57,20 @@ class _LbState extends State<Lb> {
     });
   }
 
-  Future<String> getip() async {
-    try {
-      final socket = await Socket.connect(
-        "1.2.3.4",
-        99,
-        timeout: Duration(seconds: 1),
-      );
-      final localIp = socket.address.address;
-      await socket.close();
-      return localIp;
-    } catch (e) {
+  Future<void> scout(General general) async {
+    _hosts.clear();
+    general.busy = true;
+    final selfip = await NetworkInfo().getWifiIP() ?? LocalIp.get().toString();
+    if (selfip.toString() == "0.0.0.0") {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("this is a fail to get the ip from a socket"),
+            content: Text("something went wrong with getting the ip"),
             duration: Duration(seconds: 3),
           ),
         );
       }
-      return "0.0.0.0";
     }
-  }
-
-  Future<void> scout(General general) async {
-    _hosts.clear();
-    general.busy = true;
-    final selfip = await NetworkInfo().getWifiIP() ?? await getip();
     var iplist = selfip.split(".").toList();
     iplist = iplist.sublist(0, 3);
     final subnet = iplist.join(".");
