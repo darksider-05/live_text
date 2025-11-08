@@ -133,12 +133,15 @@ class _LbState extends State<Lb> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  icon: Icon(
-                    Icons.flip_camera_android_sharp,
-                    size: 28,
-                    color: widget.general.busy
-                        ? widget.theme.current!["primary"]
-                        : widget.theme.current!["text"],
+                  icon: Transform.flip(
+                    flipX: true,
+                    child: Icon(
+                      Icons.refresh_rounded,
+                      size: 28,
+                      color: widget.general.busy
+                          ? widget.theme.current!["primary"]
+                          : widget.theme.current!["text"],
+                    ),
                   ),
                   onPressed: () async {
                     widget.general.busy ? null : scout(widget.general);
@@ -238,10 +241,13 @@ class _LbState extends State<Lb> {
                               fontSize: 16,
                             ),
                           ),
-                          Icon(
-                            Icons.flip_camera_android_rounded,
-                            color: widget.theme.current!["text"],
-                            size: 22,
+                          Transform.flip(
+                            flipX: true,
+                            child: Icon(
+                              Icons.refresh_rounded,
+                              color: widget.theme.current!["text"],
+                              size: 22,
+                            ),
                           ),
                           Text(
                             " icon to search",

@@ -34,9 +34,11 @@ class _HpState extends State<Hp> {
   bool sure = true;
   var controller = TextEditingController();
   bool clip = false;
+  bool _dispose = false;
 
   @override
   void dispose() {
+    _dispose = true;
     _client?.sink.close();
 
     _httpserver?.close(force: true);
@@ -89,7 +91,7 @@ class _HpState extends State<Hp> {
             _client = null;
           });
 
-          if (_udpserver == null) {
+          if (_udpserver == null && !_dispose) {
             startUdp();
           }
         },
@@ -99,7 +101,7 @@ class _HpState extends State<Hp> {
             _client = null;
           });
 
-          if (_udpserver == null) {
+          if (_udpserver == null && !_dispose) {
             startUdp();
           }
         },
