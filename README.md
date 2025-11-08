@@ -8,7 +8,7 @@ Live Text is a cross-platform Flutter application that enables real-time text sy
 
 * 🔁 **Real-Time Synchronization** — Instantly mirrors text updates between one host and one client in both directions.
 
-* 📱 **Cross-Platform Compatibility** — Works on Android, iOS, and desktop platforms (Windows, macOS, Linux). Web support is not currently implemented.
+* 📱 **Cross-Platform Compatibility** — Works on Android and desktop platforms (Windows, macOS, Linux). Web and ios support is not currently implemented.
 
 * 🧩 **Zero-Configuration Setup** — Devices automatically discover each other on the local network; no manual IP entry required.
 
