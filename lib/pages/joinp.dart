@@ -86,6 +86,7 @@ class _JpState extends State<Jp> {
 
   @override
   void dispose() {
+    Clipboard.setData(ClipboardData(text: ""));
     _channel?.sink.close();
     _channel = null;
     super.dispose();

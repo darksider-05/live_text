@@ -38,6 +38,7 @@ class _HpState extends State<Hp> {
 
   @override
   void dispose() {
+    Clipboard.setData(ClipboardData(text: ""));
     _dispose = true;
     _client?.sink.close();
 
