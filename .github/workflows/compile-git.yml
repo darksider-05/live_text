@@ -133,9 +133,9 @@ jobs:
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
   
           # Try to locate icon inside Flutter assets
-          ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/livetext.png"
+          ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/icon.png"
           if [ -f "$ICON_PATH" ]; then
-            cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/livetext.png
+            cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/icon.png
           else
             echo "⚠️ Icon not found at $ICON_PATH, skipping..."
           fi
