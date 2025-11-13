@@ -82,7 +82,7 @@ class _HpState extends State<Hp> {
             setState(() {
               controller.text = decoded["content"];
             });
-            broadcast();
+            if (clip) Clipboard.setData(ClipboardData(text: controller.text));
           }
         },
 

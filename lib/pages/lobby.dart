@@ -133,15 +133,12 @@ class _LbState extends State<Lb> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
-                  icon: Transform.flip(
-                    flipX: true,
-                    child: Icon(
-                      Icons.refresh_rounded,
-                      size: 28,
-                      color: widget.general.busy
-                          ? widget.theme.current!["primary"]
-                          : widget.theme.current!["text"],
-                    ),
+                  icon: Icon(
+                    Icons.refresh_rounded,
+                    size: 28,
+                    color: widget.general.busy
+                        ? widget.theme.current!["primary"]
+                        : widget.theme.current!["text"],
                   ),
                   onPressed: () async {
                     widget.general.busy ? null : scout(widget.general);
@@ -241,13 +238,17 @@ class _LbState extends State<Lb> {
                               fontSize: 16,
                             ),
                           ),
-                          Transform.flip(
-                            flipX: true,
-                            child: Icon(
+                          IconButton(
+                            icon: Icon(
                               Icons.refresh_rounded,
-                              color: widget.theme.current!["text"],
                               size: 22,
+                              color: widget.theme.current!["text"],
                             ),
+                            onPressed: () async {
+                              widget.general.busy
+                                  ? null
+                                  : scout(widget.general);
+                            },
                           ),
                           Text(
                             " icon to search",

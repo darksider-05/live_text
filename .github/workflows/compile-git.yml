@@ -32,7 +32,7 @@ jobs:
       - name: Upload Windows build
         uses: actions/upload-artifact@v4
         with:
-          name: windows-build-exe
+          name: windows-release
           path: build/windows/x64/runner/Release/
 
   build-android:
@@ -56,7 +56,7 @@ jobs:
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: android-build-apk
+          name: android-release
           path: build/app/outputs/flutter-apk/app-release.apk
 
   build-macos:
@@ -80,11 +80,14 @@ jobs:
       - name: Build macOS app
         run: flutter build macos --release
 
-      - name: Upload macOS build
+      - name: Compress macOS app
+        run: zip -r macos-build-app.zip build/macos/Build/Products/Release/LiveText.app
+
+      - name: Upload compressed macOS build
         uses: actions/upload-artifact@v4
         with:
-          name: macos-build-app
-          path: build/macos/Build/Products/Release/
+          name: macos-release
+          path: macos-build-app.zip
 
   build-linux:
     runs-on: ubuntu-latest
@@ -115,7 +118,7 @@ jobs:
       - name: Upload Linux build
         uses: actions/upload-artifact@v4
         with:
-          name: linux-build-app
+          name: linux-release
           path: build/linux/x64/release/bundle/
 
 #  build-ios:
