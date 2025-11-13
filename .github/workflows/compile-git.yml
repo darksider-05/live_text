@@ -126,22 +126,21 @@ jobs:
       - name: Prepare AppDir
         run: |
           mkdir -p AppDir/usr/bin
-          mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-  
+
           # Copy Flutter bundle to AppDir
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-  
-          # Try to locate icon inside Flutter assets
-          ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/icon.png"
+          
+          # Copy icon if exists
+          ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/livetext.png"
           if [ -f "$ICON_PATH" ]; then
-            cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/icon.png
+            cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/livetext.png
           else
             echo "⚠️ Icon not found at $ICON_PATH, skipping..."
           fi
-  
-          # Create desktop entry
-          cat > AppDir/usr/share/applications/livetext.desktop <<EOF
+
+          # Desktop file must be top-level for appimagetool
+          cat > AppDir/livetext.desktop <<EOF
           [Desktop Entry]
           Name=LiveText
           Exec=LiveText
@@ -149,7 +148,7 @@ jobs:
           Type=Application
           Categories=Utility;
           EOF
-  
+          
       - name: Build AppImage (no FUSE)
         run: |
           ./appimagetool-extracted/AppRun AppDir LiveText-x86_64.AppImage
