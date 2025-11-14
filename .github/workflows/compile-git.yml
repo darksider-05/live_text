@@ -127,22 +127,32 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-
+      
           # Copy Flutter bundle to AppDir
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-
+      
+          # Rename executable to LiveText
+          mv AppDir/usr/bin/* AppDir/usr/bin/LiveText
+      
+          # Create AppRun launcher
+          cat > AppDir/AppRun << 'EOF'
+          #!/bin/bash
+          HERE="$(dirname "$(readlink -f "$0")")"
+          export LD_LIBRARY_PATH="$HERE/usr/bin":"$LD_LIBRARY_PATH"
+          exec "$HERE/usr/bin/LiveText" "$@"
+          EOF
+          chmod +x AppDir/AppRun
+      
           # Copy icon if it exists
           ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/icon.png"
           if [ -f "$ICON_PATH" ]; then
-          # Top-level copy (required by appimagetool)
-          cp "$ICON_PATH" AppDir/livetext.png
-          # Also copy into icons folder (optional)
-          cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/livetext.png
+            cp "$ICON_PATH" AppDir/livetext.png
+            cp "$ICON_PATH" AppDir/usr/share/icons/hicolor/256x256/apps/livetext.png
           else
-          echo "⚠️ Icon not found at $ICON_PATH, skipping..."
+            echo "⚠️ Icon not found at $ICON_PATH, skipping..."
           fi
-
-          # Desktop file must be top-level for appimagetool
+      
+          # Create .desktop file
           cat > AppDir/livetext.desktop <<EOF
           [Desktop Entry]
           Name=LiveText
@@ -152,15 +162,6 @@ jobs:
           Categories=Utility;
           EOF
 
-      - name: Build AppImage (no FUSE)
-        run: |
-          ./appimagetool-extracted/AppRun AppDir LiveText-x86_64.AppImage
-  
-      - name: Upload AppImage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: livetext-appimage
-          path: LiveText-x86_64.AppImage
 
 
 
