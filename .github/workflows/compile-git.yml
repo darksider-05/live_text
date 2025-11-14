@@ -127,20 +127,20 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-      
+
           # Copy Flutter bundle to AppDir
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
-      
+
           # Detect Flutter executable and rename it to LiveText
           BIN=$(find AppDir/usr/bin -maxdepth 1 -type f -executable | head -n 1)
-      
+
           if [ -z "$BIN" ]; then
             echo "❌ No executable found in AppDir/usr/bin"
             exit 1
           fi
-      
+
           mv "$BIN" AppDir/usr/bin/LiveText
-      
+
           # Create AppRun launcher
           cat > AppDir/AppRun << 'EOF'
           #!/bin/bash
@@ -149,7 +149,7 @@ jobs:
           exec "$HERE/usr/bin/LiveText" "$@"
           EOF
           chmod +x AppDir/AppRun
-      
+
           # Copy icon if it exists
           ICON_PATH="build/linux/x64/release/bundle/data/flutter_assets/linux/assets/icon.png"
           if [ -f "$ICON_PATH" ]; then
@@ -158,7 +158,7 @@ jobs:
           else
             echo "⚠️ Icon not found at $ICON_PATH, skipping..."
           fi
-      
+
           # Create .desktop file
           cat > AppDir/livetext.desktop <<EOF
           [Desktop Entry]
@@ -168,10 +168,20 @@ jobs:
           Type=Application
           Categories=Utility;
           EOF
-      
-      
-      
-      
+      - name: Build AppImage
+        run: |
+          ./appimagetool-extracted/AppRun AppDir LiveText.AppImage
+
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiveText-AppImage
+          path: LiveText.AppImage
+
+
+
+
+
 
 #  build-ios:
 #    runs-on: macos-latest
