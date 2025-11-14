@@ -131,8 +131,15 @@ jobs:
           # Copy Flutter bundle to AppDir
           cp -r build/linux/x64/release/bundle/* AppDir/usr/bin/
       
-          # Rename executable to LiveText
-          mv AppDir/usr/bin/* AppDir/usr/bin/LiveText
+          # Detect Flutter executable and rename it to LiveText
+          BIN=$(find AppDir/usr/bin -maxdepth 1 -type f -executable | head -n 1)
+      
+          if [ -z "$BIN" ]; then
+            echo "❌ No executable found in AppDir/usr/bin"
+            exit 1
+          fi
+      
+          mv "$BIN" AppDir/usr/bin/LiveText
       
           # Create AppRun launcher
           cat > AppDir/AppRun << 'EOF'
@@ -161,9 +168,10 @@ jobs:
           Type=Application
           Categories=Utility;
           EOF
-
-
-
+      
+      
+      
+      
 
 #  build-ios:
 #    runs-on: macos-latest
