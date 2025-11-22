@@ -118,7 +118,7 @@ class _HpState extends State<Hp> {
   }
 
   void startUdp() async {
-    final selfip = await NetworkInfo().getWifiIP() ?? LocalIp.get();
+    final selfip = await NetworkInfo().getWifiIP() ?? await LocalIp.get();
     if (selfip.toString() == "0.0.0.0") {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -273,6 +273,9 @@ class _HpState extends State<Hp> {
                       onPressed: () {
                         setState(() {
                           clip = !clip;
+                          Clipboard.setData(
+                            ClipboardData(text: controller.text),
+                          );
                         });
                       },
                       label: Text(

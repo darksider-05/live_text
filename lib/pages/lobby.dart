@@ -60,7 +60,7 @@ class _LbState extends State<Lb> {
   Future<void> scout(General general) async {
     _hosts.clear();
     general.busy = true;
-    final selfip = await NetworkInfo().getWifiIP() ?? LocalIp.get().toString();
+    final selfip = await NetworkInfo().getWifiIP() ?? await LocalIp.get();
     if (selfip.toString() == "0.0.0.0") {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
