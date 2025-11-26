@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:livetext/ipgetter.dart';
@@ -174,41 +173,27 @@ class _HpState extends State<Hp> {
             width: truewidth,
             height: trueheight,
             color: widget.theme.current!["primary"],
-            child: Column(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: truewidth),
-                Text(
-                  "start hosting?",
-                  style: TextStyle(color: widget.theme.current!["text"]),
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    sure = false;
+                  });
+                  startTcp();
+                  startUdp();
+                },
+                style: ElevatedButton.styleFrom(
+                  elevation: 10,
+                  backgroundColor: widget.theme.current!["bgtint"],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: widget.theme.current!["bgtint"],
-                  ),
-                  width: (min(truewidth, trueheight) * 0.2),
-                  height: (min(truewidth, trueheight) * 0.2),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        sure = false;
-                      });
-                      startTcp();
-                      startUdp();
-                    },
-                    icon: Text(
-                      "yes",
-                      style: TextStyle(
-                        color: widget.theme.current!["text"],
-                        fontSize: 17,
-                      ),
-                    ),
+                child: Text(
+                  "start hosting",
+                  style: TextStyle(
+                    color: widget.theme.current!["text"],
+                    fontSize: 17,
                   ),
                 ),
-              ],
+              ),
             ),
           )
         : Stack(
