@@ -174,23 +174,30 @@ class _HpState extends State<Hp> {
             height: trueheight,
             color: widget.theme.current!["primary"],
             child: Center(
-              child: ElevatedButton(
-                onPressed: () {
+              child: GestureDetector(
+                onTap: () {
                   setState(() {
                     sure = false;
                   });
                   startTcp();
                   startUdp();
                 },
-                style: ElevatedButton.styleFrom(
-                  elevation: 10,
-                  backgroundColor: widget.theme.current!["bgtint"],
-                ),
-                child: Text(
-                  "start hosting",
-                  style: TextStyle(
-                    color: widget.theme.current!["text"],
-                    fontSize: 17,
+                child: ClipRRect(
+                  child: ClipOval(
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.black26),
+                      height: trueheight * 0.25,
+                      width: trueheight * 0.25,
+                      child: Center(
+                        child: Text(
+                          "start hosting",
+                          style: TextStyle(
+                            color: widget.theme.current!["text"],
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

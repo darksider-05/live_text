@@ -146,7 +146,7 @@ class _LbState extends State<Lb> {
                 ),
                 IconButton(
                   icon: Icon(
-                    Icons.clear_all_rounded,
+                    Icons.delete_rounded,
                     size: 28,
                     color: widget.theme.current!["text"],
                   ),
@@ -218,46 +218,44 @@ class _LbState extends State<Lb> {
                     },
                   ),
                 )
-              : Container(
-                  width: truewidth * 0.75,
-                  height: trueheight * 0.09,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: widget.theme.current!["primary"],
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: truewidth * 0.15),
-                      child: Row(
-                        children: [
-                          Text(
-                            "press the ",
-                            style: TextStyle(
-                              color: widget.theme.current!["text"],
-                              fontSize: 16,
+              : GestureDetector(
+                  onTap: () async {
+                    widget.general.busy ? null : scout(widget.general);
+                  },
+                  child: Container(
+                    width: truewidth * 0.75,
+                    height: trueheight * 0.09,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: widget.theme.current!["primary"],
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: truewidth * 0.1),
+                        child: Row(
+                          children: [
+                            Text(
+                              "press the ",
+                              style: TextStyle(
+                                color: widget.theme.current!["text"],
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            icon: Icon(
+                            Icon(
                               Icons.refresh_rounded,
                               size: 22,
                               color: widget.theme.current!["text"],
                             ),
-                            onPressed: () async {
-                              widget.general.busy
-                                  ? null
-                                  : scout(widget.general);
-                            },
-                          ),
-                          Text(
-                            " icon to search",
-                            style: TextStyle(
-                              color: widget.theme.current!["text"],
-                              fontSize: 16,
+                            Text(
+                              " icon to search",
+                              style: TextStyle(
+                                color: widget.theme.current!["text"],
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

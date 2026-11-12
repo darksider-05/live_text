@@ -158,6 +158,7 @@ class _PvState extends State<Pv> {
                   },
                   icon: Icon(
                     Icons.settings,
+                    size: 28,
                     color: widget.theme.current!["text"],
                   ),
                 ),

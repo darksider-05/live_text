@@ -1,6 +1,7 @@
 # Live Text
+![alt text](linux/assets/icon.png)
 
-Live Text is a cross-platform Flutter application that enables real-time text synchronization between a single host and client over a local network. Designed for simplicity, speed, and privacy, it allows seamless text sharing across devices without cloud services, user accounts, or configuration steps. Whether you’re transferring snippets between your phone and laptop or maintaining a synchronized clipboard between devices, Live Text delivers a secure and frictionless experience entirely within your local network.
+Live Text is a cross-platform Flutter application that enables frictionless local communication between a single host and client over a local network. Designed for simplicity, speed, and privacy, it allows seamless text sharing across devices without cloud services, user accounts, or configuration steps. Whether you’re transferring snippets between your phone and laptop or maintaining a synchronized clipboard between devices, Live Text delivers a secure and frictionless experience entirely within your local network.
 
 ---
 
@@ -65,7 +66,7 @@ After discovery, the client opens a **WebSocket connection** to the host.
 
 ### 🔒 Security Model
 
-Live Text leverages **security-through-simplicity**:  
+Live Text leverages **security through trust-boundry-restriction**:  
 
 - **Local Network Isolation**: All communication occurs within LAN or mobile hotspot; no cloud or external endpoints.  
 - **Single-Client Enforcement**: Only one client may connect to a host at any time. Hosts reject additional connection attempts.  
